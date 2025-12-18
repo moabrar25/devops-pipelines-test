@@ -1,0 +1,31 @@
+name: Scheduled Health Check
+
+on:
+  schedule:
+    - cron: "0 9 * * MON" # Run every Monday at 9 AM UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run health check
+        run: |
+          echo "Running scheduled health check..."
+          npm test
+          npm run run
+          echo "Health check completed successfully!"
+
+      - name: Send notification
+        run: echo "Health check passed - No issues detected!"
